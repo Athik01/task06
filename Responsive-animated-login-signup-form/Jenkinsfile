@@ -69,23 +69,24 @@ pipeline {
             }
         }
 
+        pipeline {
+    agent any
+    environment {
+        KUBECONFIG = credentials('kubernetes-token')
+    }
+    stages {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    dir(WORK_DIR) {
-                        echo "Deploying Doctor-App to Kubernetes..."
-                        // Use single quotes in PowerShell for file paths to avoid terminator errors
-                        powershell '''
-                            Write-Host "Applying Deployment: ${env:K8S_DEPLOYMENT}"
-                            kubectl apply -f "${env:K8S_DEPLOYMENT}"
-                            
-                            Write-Host "Applying Service: ${env:K8S_SERVICE}"
-                            kubectl apply -f "${env:K8S_SERVICE}"
-                        '''
-                    }
+                    echo "Deploying Doctor-App to Kubernetes..."
+                    powershell 'kubectl apply -f k8s/doctor-app-deployment.yaml --validate=false'
+                    powershell 'kubectl apply -f k8s/doctor-app-service.yaml --validate=false'
                 }
             }
         }
+    }
+}
+
 
         stage('Deploy Monitoring Stack') {
             steps {
