@@ -9,7 +9,7 @@ pipeline {
         PROMETHEUS_DEPLOYMENT = "k8s/prometheus-deployment.yaml"
         PROMETHEUS_CONFIG = "k8s/prometheus-config.yaml"
         GRAFANA_DEPLOYMENT = "k8s/grafana-deployment.yaml"
-        KUBECONFIG = credentials('kubernetes-token')
+        KUBECONFIG = 'C:/Users/rathi/.kube/config'
     }
 
     stages {
