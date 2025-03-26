@@ -21,7 +21,11 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo "📥 Cloning repository..."
-                git branch: 'main', url: 'https://github.com/Athik01/Responsive-animated-login-signup-form.git'
+                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+                    sh """
+                        git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Athik01/Responsive-animated-login-signup-form.git
+                    """
+                }
             }
         }
 
@@ -41,10 +45,10 @@ pipeline {
             steps {
                 script {
                     echo "📤 Pushing Docker Image to Docker Hub..."
-                    withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         sh """
                             echo '🔄 Logging in to Docker Hub...'
-                            docker login -u mohamedathikr -p qwerty786!A
+                            docker login -u $DOCKER_USER -p $DOCKER_PASS
                             echo '🚀 Pushing Image: $DOCKER_IMAGE'
                             docker push $DOCKER_IMAGE
                         """
