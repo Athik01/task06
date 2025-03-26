@@ -14,7 +14,7 @@ pipeline {
         stage('Cleanup Workspace') {
             steps {
                 echo "🧹 Cleaning workspace..."
-                cleanWs() // Cleans workspace before fetching new code
+                cleanWs()
             }
         }
 
@@ -22,8 +22,9 @@ pipeline {
             steps {
                 echo "📥 Cloning repository..."
                 withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-                    sh """
-                        git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Athik01/Responsive-animated-login-signup-form.git
+                    powershell """
+                        Write-Output '🔄 Cloning repository...'
+                        git clone https://$env:GITHUB_USER`:$env:GITHUB_TOKEN@github.com/Athik01/Responsive-animated-login-signup-form.git
                     """
                 }
             }
@@ -33,9 +34,9 @@ pipeline {
             steps {
                 script {
                     echo "🐳 Building Docker Image: $DOCKER_IMAGE"
-                    sh """
-                        echo '🚀 Starting Docker Build...'
-                        docker build -t $DOCKER_IMAGE .
+                    powershell """
+                        Write-Output '🚀 Starting Docker Build...'
+                        docker build -t $env:DOCKER_IMAGE .
                     """
                 }
             }
@@ -46,11 +47,11 @@ pipeline {
                 script {
                     echo "📤 Pushing Docker Image to Docker Hub..."
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh """
-                            echo '🔄 Logging in to Docker Hub...'
-                            docker login -u $DOCKER_USER -p $DOCKER_PASS
-                            echo '🚀 Pushing Image: $DOCKER_IMAGE'
-                            docker push $DOCKER_IMAGE
+                        powershell """
+                            Write-Output '🔄 Logging in to Docker Hub...'
+                            docker login -u $env:DOCKER_USER -p $env:DOCKER_PASS
+                            Write-Output '🚀 Pushing Image: $env:DOCKER_IMAGE'
+                            docker push $env:DOCKER_IMAGE
                         """
                     }
                 }
@@ -61,11 +62,11 @@ pipeline {
             steps {
                 script {
                     echo "🚀 Deploying Doctor-App to Kubernetes..."
-                    sh """
-                        echo '📂 Applying Deployment: $K8S_DEPLOYMENT'
-                        kubectl apply -f $K8S_DEPLOYMENT
-                        echo '📂 Applying Service: $K8S_SERVICE'
-                        kubectl apply -f $K8S_SERVICE
+                    powershell """
+                        Write-Output '📂 Applying Deployment: $env:K8S_DEPLOYMENT'
+                        kubectl apply -f $env:K8S_DEPLOYMENT
+                        Write-Output '📂 Applying Service: $env:K8S_SERVICE'
+                        kubectl apply -f $env:K8S_SERVICE
                     """
                 }
             }
@@ -75,13 +76,13 @@ pipeline {
             steps {
                 script {
                     echo "🚀 Deploying Prometheus and Grafana to Kubernetes..."
-                    sh """
-                        echo '📂 Applying Prometheus Config: $PROMETHEUS_CONFIG'
-                        kubectl apply -f $PROMETHEUS_CONFIG
-                        echo '📂 Applying Prometheus Deployment: $PROMETHEUS_DEPLOYMENT'
-                        kubectl apply -f $PROMETHEUS_DEPLOYMENT
-                        echo '📂 Applying Grafana Deployment: $GRAFANA_DEPLOYMENT'
-                        kubectl apply -f $GRAFANA_DEPLOYMENT
+                    powershell """
+                        Write-Output '📂 Applying Prometheus Config: $env:PROMETHEUS_CONFIG'
+                        kubectl apply -f $env:PROMETHEUS_CONFIG
+                        Write-Output '📂 Applying Prometheus Deployment: $env:PROMETHEUS_DEPLOYMENT'
+                        kubectl apply -f $env:PROMETHEUS_DEPLOYMENT
+                        Write-Output '📂 Applying Grafana Deployment: $env:GRAFANA_DEPLOYMENT'
+                        kubectl apply -f $env:GRAFANA_DEPLOYMENT
                     """
                 }
             }
@@ -91,10 +92,10 @@ pipeline {
             steps {
                 script {
                     echo "🔍 Verifying Kubernetes Deployment..."
-                    sh """
-                        echo '📌 Listing Pods...'
+                    powershell """
+                        Write-Output '📌 Listing Pods...'
                         kubectl get pods
-                        echo '📌 Listing Services...'
+                        Write-Output '📌 Listing Services...'
                         kubectl get svc
                     """
                 }
