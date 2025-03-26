@@ -7,7 +7,7 @@ pipeline {
         K8S_DEPLOYMENT = "${WORK_DIR}/k8s/doctor-app-deployment.yaml"
         K8S_SERVICE = "${WORK_DIR}/k8s/doctor-app-service.yaml"
         PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/k8s/prometheus-deployment.yaml"
-        PROMETHEUS_CONFIG = "${WORK_DIR}/k8s/prometheus-config.yaml"
+        PROMETHEUS_CONFIG = "${WORK_DIR}/k8s/prometheus-configmap.yaml"  // ✅ Fixed file name
         GRAFANA_DEPLOYMENT = "${WORK_DIR}/k8s/grafana-deployment.yaml"
         KUBECONFIG = 'C:/Users/rathi/.kube/config'
     }
@@ -64,12 +64,36 @@ pipeline {
             }
         }
 
+        stage('Verify YAML Files') {  // ✅ New stage to check files before deployment
+            steps {
+                script {
+                    echo "Verifying Kubernetes YAML Files..."
+                    powershell '''
+                        if (!(Test-Path "${env:PROMETHEUS_CONFIG}")) {
+                            Write-Host "ERROR: Prometheus config file not found!" -ForegroundColor Red
+                            exit 1
+                        }
+                        if (!(Test-Path "${env:PROMETHEUS_DEPLOYMENT}")) {
+                            Write-Host "ERROR: Prometheus deployment file not found!" -ForegroundColor Red
+                            exit 1
+                        }
+                        if (!(Test-Path "${env:GRAFANA_DEPLOYMENT}")) {
+                            Write-Host "ERROR: Grafana deployment file not found!" -ForegroundColor Red
+                            exit 1
+                        }
+                    '''
+                }
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 script {
                     echo "Deploying Doctor-App to Kubernetes..."
-                    powershell 'kubectl apply -f Responsive-animated-login-signup-form/k8s/doctor-app-deployment.yaml --validate=false'
-                    powershell 'kubectl apply -f Responsive-animated-login-signup-form/k8s/doctor-app-service.yaml --validate=false'
+                    powershell '''
+                        kubectl apply -f "${env:K8S_DEPLOYMENT}" --validate=false
+                        kubectl apply -f "${env:K8S_SERVICE}" --validate=false
+                    '''
                 }
             }
         }
@@ -77,19 +101,17 @@ pipeline {
         stage('Deploy Monitoring Stack') {
             steps {
                 script {
-                    dir(WORK_DIR) {
-                        echo "Deploying Prometheus and Grafana..."
-                        powershell '''
-                            Write-Host "Applying Prometheus Config: ${env:PROMETHEUS_CONFIG}"
-                            kubectl apply -f "${env:PROMETHEUS_CONFIG}"
-                            
-                            Write-Host "Applying Prometheus Deployment: ${env:PROMETHEUS_DEPLOYMENT}"
-                            kubectl apply -f "${env:PROMETHEUS_DEPLOYMENT}"
-                            
-                            Write-Host "Applying Grafana Deployment: ${env:GRAFANA_DEPLOYMENT}"
-                            kubectl apply -f "${env:GRAFANA_DEPLOYMENT}"
-                        '''
-                    }
+                    echo "Deploying Prometheus and Grafana..."
+                    powershell '''
+                        Write-Host "Applying Prometheus Config: ${env:PROMETHEUS_CONFIG}"
+                        kubectl apply -f "${env:PROMETHEUS_CONFIG}"
+                        
+                        Write-Host "Applying Prometheus Deployment: ${env:PROMETHEUS_DEPLOYMENT}"
+                        kubectl apply -f "${env:PROMETHEUS_DEPLOYMENT}"
+                        
+                        Write-Host "Applying Grafana Deployment: ${env:GRAFANA_DEPLOYMENT}"
+                        kubectl apply -f "${env:GRAFANA_DEPLOYMENT}"
+                    '''
                 }
             }
         }
