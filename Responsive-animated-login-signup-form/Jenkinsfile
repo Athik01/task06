@@ -68,8 +68,8 @@ pipeline {
             steps {
                 script {
                     echo "Deploying Doctor-App to Kubernetes..."
-                    powershell 'kubectl apply -f k8s/doctor-app-deployment.yaml --validate=false'
-                    powershell 'kubectl apply -f k8s/doctor-app-service.yaml --validate=false'
+                    powershell 'kubectl apply -f Responsive-animated-login-signup-form/k8s/doctor-app-deployment.yaml --validate=false'
+                    powershell 'kubectl apply -f Responsive-animated-login-signup-form/k8s/doctor-app-service.yaml --validate=false'
                 }
             }
         }
