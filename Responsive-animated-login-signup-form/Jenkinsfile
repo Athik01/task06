@@ -2,18 +2,14 @@ pipeline {
     agent any
 
     environment {
-        // Docker image
         DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
-        
-        // Root folder containing Dockerfile + subfolder for K8s files
         WORK_DIR = "Responsive-animated-login-signup-form"
-        
-        // Paths to K8s YAML files under the k8s folder
         K8S_DEPLOYMENT = "k8s/doctor-app-deployment.yaml"
         K8S_SERVICE = "k8s/doctor-app-service.yaml"
         PROMETHEUS_DEPLOYMENT = "k8s/prometheus-deployment.yaml"
         PROMETHEUS_CONFIG = "k8s/prometheus-config.yaml"
         GRAFANA_DEPLOYMENT = "k8s/grafana-deployment.yaml"
+        KUBECONFIG = credentials('kubernetes-token')
     }
 
     stages {
@@ -32,7 +28,6 @@ pipeline {
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
                         url: 'https://github.com/Athik01/task06.git',
-                        // If you have GitHub credentials stored in Jenkins, update this ID
                         credentialsId: 'git-credentials'
                     ]]
                 ])
@@ -69,12 +64,6 @@ pipeline {
             }
         }
 
-        pipeline {
-    agent any
-    environment {
-        KUBECONFIG = credentials('kubernetes-token')
-    }
-    stages {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
@@ -84,9 +73,6 @@ pipeline {
                 }
             }
         }
-    }
-}
-
 
         stage('Deploy Monitoring Stack') {
             steps {
