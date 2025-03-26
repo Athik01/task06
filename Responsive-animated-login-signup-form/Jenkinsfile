@@ -19,16 +19,18 @@ pipeline {
         }
 
         stage('Clone Repository') {
-            steps {
-                echo "📥 Cloning repository..."
-                withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
-                    powershell """
-                        Write-Output '🔄 Cloning repository...'
-                        git clone https://$env:GITHUB_USER`:$env:GITHUB_TOKEN@github.com/Athik01/Responsive-animated-login-signup-form.git
-                    """
-                }
-            }
+    steps {
+        echo "📥 Cloning repository..."
+        withCredentials([usernamePassword(credentialsId: 'github-token', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_TOKEN')]) {
+            powershell """
+                \$env:GIT_ASKPASS = 'echo $GITHUB_TOKEN'
+                echo 'Cloning into repository...'
+                git clone https://$GITHUB_USER:$GITHUB_TOKEN@github.com/Athik01/Responsive-animated-login-signup-form.git
+            """
         }
+    }
+}
+
 
         stage('Build Docker Image') {
             steps {
