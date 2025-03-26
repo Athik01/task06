@@ -3,11 +3,12 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
-        K8S_DEPLOYMENT = "doctor-app-deployment.yaml"
-        K8S_SERVICE = "doctor-app-service.yaml"
-        PROMETHEUS_DEPLOYMENT = "prometheus-deployment.yaml"
-        PROMETHEUS_CONFIG = "prometheus-config.yaml"
-        GRAFANA_DEPLOYMENT = "grafana-deployment.yaml"
+        WORK_DIR = "Responsive-animated-login-signup-form"
+        K8S_DEPLOYMENT = "${WORK_DIR}/doctor-app-deployment.yaml"
+        K8S_SERVICE = "${WORK_DIR}/doctor-app-service.yaml"
+        PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/prometheus-deployment.yaml"
+        PROMETHEUS_CONFIG = "${WORK_DIR}/prometheus-config.yaml"
+        GRAFANA_DEPLOYMENT = "${WORK_DIR}/grafana-deployment.yaml"
     }
 
     stages {
@@ -26,7 +27,7 @@ pipeline {
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
                         url: 'https://github.com/Athik01/task06.git',
-                        credentialsId: 'git-credentials' // Use the ID of your Jenkins credential
+                        credentialsId: 'git-credentials'
                     ]]
                 ])
             }
@@ -35,11 +36,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "🐳 Building Docker Image: ${DOCKER_IMAGE}"
-                    powershell """
-                        Write-Output '🚀 Starting Docker Build...'
-                        docker build -t "${DOCKER_IMAGE}" .
-                    """
+                    dir(WORK_DIR) { // ✅ Set working directory
+                        echo "🐳 Building Docker Image: ${DOCKER_IMAGE}"
+                        powershell """
+                            Write-Output '🚀 Starting Docker Build...'
+                            docker build -t "${DOCKER_IMAGE}" .
+                        """
+                    }
                 }
             }
         }
@@ -63,13 +66,15 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    echo "🚀 Deploying Doctor-App to Kubernetes..."
-                    powershell """
-                        Write-Output '📂 Applying Deployment: ${K8S_DEPLOYMENT}'
-                        kubectl apply -f "${K8S_DEPLOYMENT}"
-                        Write-Output '📂 Applying Service: ${K8S_SERVICE}'
-                        kubectl apply -f "${K8S_SERVICE}"
-                    """
+                    dir(WORK_DIR) { // ✅ Ensure correct directory for YAML files
+                        echo "🚀 Deploying Doctor-App to Kubernetes..."
+                        powershell """
+                            Write-Output '📂 Applying Deployment: ${K8S_DEPLOYMENT}'
+                            kubectl apply -f "${K8S_DEPLOYMENT}"
+                            Write-Output '📂 Applying Service: ${K8S_SERVICE}'
+                            kubectl apply -f "${K8S_SERVICE}"
+                        """
+                    }
                 }
             }
         }
@@ -77,15 +82,17 @@ pipeline {
         stage('Deploy Monitoring Stack') {
             steps {
                 script {
-                    echo "🚀 Deploying Prometheus and Grafana to Kubernetes..."
-                    powershell """
-                        Write-Output '📂 Applying Prometheus Config: ${PROMETHEUS_CONFIG}'
-                        kubectl apply -f "${PROMETHEUS_CONFIG}"
-                        Write-Output '📂 Applying Prometheus Deployment: ${PROMETHEUS_DEPLOYMENT}'
-                        kubectl apply -f "${PROMETHEUS_DEPLOYMENT}"
-                        Write-Output '📂 Applying Grafana Deployment: ${GRAFANA_DEPLOYMENT}'
-                        kubectl apply -f "${GRAFANA_DEPLOYMENT}"
-                    """
+                    dir(WORK_DIR) { // ✅ Ensure correct directory for monitoring files
+                        echo "🚀 Deploying Prometheus and Grafana to Kubernetes..."
+                        powershell """
+                            Write-Output '📂 Applying Prometheus Config: ${PROMETHEUS_CONFIG}'
+                            kubectl apply -f "${PROMETHEUS_CONFIG}"
+                            Write-Output '📂 Applying Prometheus Deployment: ${PROMETHEUS_DEPLOYMENT}'
+                            kubectl apply -f "${PROMETHEUS_DEPLOYMENT}"
+                            Write-Output '📂 Applying Grafana Deployment: ${GRAFANA_DEPLOYMENT}'
+                            kubectl apply -f "${GRAFANA_DEPLOYMENT}"
+                        """
+                    }
                 }
             }
         }
