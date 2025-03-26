@@ -4,11 +4,11 @@ pipeline {
     environment {
         DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
         WORK_DIR = "Responsive-animated-login-signup-form"
-        K8S_DEPLOYMENT = "${WORK_DIR}/k8s/doctor-app-deployment.yaml"
-        K8S_SERVICE = "${WORK_DIR}/k8s/doctor-app-service.yaml"
-        PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/k8s/prometheus-deployment.yaml"
-        PROMETHEUS_CONFIG = "${WORK_DIR}/k8s/prometheus-config.yaml"
-        GRAFANA_DEPLOYMENT = "${WORK_DIR}/k8s/grafana-deployment.yaml"
+        K8S_DEPLOYMENT = "${WORK_DIR}/doctor-app-deployment.yaml"
+        K8S_SERVICE = "${WORK_DIR}/doctor-app-service.yaml"
+        PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/prometheus-deployment.yaml"
+        PROMETHEUS_CONFIG = "${WORK_DIR}/prometheus-config.yaml"
+        GRAFANA_DEPLOYMENT = "${WORK_DIR}/grafana-deployment.yaml"
     }
 
     stages {
