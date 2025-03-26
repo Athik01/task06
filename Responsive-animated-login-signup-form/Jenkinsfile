@@ -19,27 +19,26 @@ pipeline {
         }
 
         stage('Clone Repository') {
-    steps {
-        echo "📥 Cloning repository..."
-        checkout([
-            $class: 'GitSCM',
-            branches: [[name: 'main']],
-            userRemoteConfigs: [[
-                url: 'https://github.com/Athik01/task06.git',
-                credentialsId: 'git-credentials' // Use the ID of your Jenkins credential
-            ]]
-        ])
-    }
-}
-
+            steps {
+                echo "📥 Cloning repository..."
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Athik01/task06.git',
+                        credentialsId: 'git-credentials' // Use the ID of your Jenkins credential
+                    ]]
+                ])
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "🐳 Building Docker Image: $DOCKER_IMAGE"
+                    echo "🐳 Building Docker Image: ${DOCKER_IMAGE}"
                     powershell """
                         Write-Output '🚀 Starting Docker Build...'
-                        docker build -t $env:DOCKER_IMAGE .
+                        docker build -t "${DOCKER_IMAGE}" .
                     """
                 }
             }
@@ -52,9 +51,9 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         powershell """
                             Write-Output '🔄 Logging in to Docker Hub...'
-                            docker login -u $env:DOCKER_USER -p $env:DOCKER_PASS
-                            Write-Output '🚀 Pushing Image: $env:DOCKER_IMAGE'
-                            docker push $env:DOCKER_IMAGE
+                            docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+                            Write-Output '🚀 Pushing Image: ${DOCKER_IMAGE}'
+                            docker push "${DOCKER_IMAGE}"
                         """
                     }
                 }
@@ -66,10 +65,10 @@ pipeline {
                 script {
                     echo "🚀 Deploying Doctor-App to Kubernetes..."
                     powershell """
-                        Write-Output '📂 Applying Deployment: $env:K8S_DEPLOYMENT'
-                        kubectl apply -f $env:K8S_DEPLOYMENT
-                        Write-Output '📂 Applying Service: $env:K8S_SERVICE'
-                        kubectl apply -f $env:K8S_SERVICE
+                        Write-Output '📂 Applying Deployment: ${K8S_DEPLOYMENT}'
+                        kubectl apply -f "${K8S_DEPLOYMENT}"
+                        Write-Output '📂 Applying Service: ${K8S_SERVICE}'
+                        kubectl apply -f "${K8S_SERVICE}"
                     """
                 }
             }
@@ -80,12 +79,12 @@ pipeline {
                 script {
                     echo "🚀 Deploying Prometheus and Grafana to Kubernetes..."
                     powershell """
-                        Write-Output '📂 Applying Prometheus Config: $env:PROMETHEUS_CONFIG'
-                        kubectl apply -f $env:PROMETHEUS_CONFIG
-                        Write-Output '📂 Applying Prometheus Deployment: $env:PROMETHEUS_DEPLOYMENT'
-                        kubectl apply -f $env:PROMETHEUS_DEPLOYMENT
-                        Write-Output '📂 Applying Grafana Deployment: $env:GRAFANA_DEPLOYMENT'
-                        kubectl apply -f $env:GRAFANA_DEPLOYMENT
+                        Write-Output '📂 Applying Prometheus Config: ${PROMETHEUS_CONFIG}'
+                        kubectl apply -f "${PROMETHEUS_CONFIG}"
+                        Write-Output '📂 Applying Prometheus Deployment: ${PROMETHEUS_DEPLOYMENT}'
+                        kubectl apply -f "${PROMETHEUS_DEPLOYMENT}"
+                        Write-Output '📂 Applying Grafana Deployment: ${GRAFANA_DEPLOYMENT}'
+                        kubectl apply -f "${GRAFANA_DEPLOYMENT}"
                     """
                 }
             }
