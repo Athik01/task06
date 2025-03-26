@@ -21,12 +21,15 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo "📥 Cloning repository..."
-                git branch: 'main', url: 'https://github.com/ATHIK05/task06.git'
+                withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    powershell """
+                        Write-Output '🌐 Cloning from GitHub...'
+                        git clone https://$env:GIT_USER:$env:GIT_PASS@github.com/Athik01/task06.git
+                        cd task06
+                    """
+                }
             }
         }
-
-
-
 
         stage('Build Docker Image') {
             steps {
