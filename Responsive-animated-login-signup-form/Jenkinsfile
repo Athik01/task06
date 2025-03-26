@@ -4,11 +4,11 @@ pipeline {
     environment {
         DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
         WORK_DIR = "Responsive-animated-login-signup-form"
-        K8S_DEPLOYMENT = "${WORK_DIR}/doctor-app-deployment.yaml"
-        K8S_SERVICE = "${WORK_DIR}/doctor-app-service.yaml"
-        PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/prometheus-deployment.yaml"
-        PROMETHEUS_CONFIG = "${WORK_DIR}/prometheus-config.yaml"
-        GRAFANA_DEPLOYMENT = "${WORK_DIR}/grafana-deployment.yaml"
+        K8S_DEPLOYMENT = "${WORK_DIR}/k8s/doctor-app-deployment.yaml"
+        K8S_SERVICE = "${WORK_DIR}/k8s/doctor-app-service.yaml"
+        PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/k8s/prometheus-deployment.yaml"
+        PROMETHEUS_CONFIG = "${WORK_DIR}/k8s/prometheus-config.yaml"
+        GRAFANA_DEPLOYMENT = "${WORK_DIR}/k8s/grafana-deployment.yaml"
     }
 
     stages {
@@ -64,20 +64,21 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes') {
-            steps {
-                script {
-                    dir(WORK_DIR) { // ✅ Ensure correct directory for YAML files
-                        echo "🚀 Deploying Doctor-App to Kubernetes..."
-                        powershell """
-                            Write-Output '📂 Applying Deployment: ${K8S_DEPLOYMENT}'
-                            kubectl apply -f "${K8S_DEPLOYMENT}"
-                            Write-Output '📂 Applying Service: ${K8S_SERVICE}'
-                            kubectl apply -f "${K8S_SERVICE}"
-                        """
-                    }
-                }
+    steps {
+        script {
+            dir(WORK_DIR) {
+                echo "🚀 Deploying Doctor-App to Kubernetes..."
+                powershell """
+                    Write-Output '📂 Applying Deployment: ${K8S_DEPLOYMENT}'
+                    kubectl apply -f '${K8S_DEPLOYMENT}'
+                    Write-Output '📂 Applying Service: ${K8S_SERVICE}'
+                    kubectl apply -f '${K8S_SERVICE}'
+                """
             }
         }
+    }
+}
+
 
         stage('Deploy Monitoring Stack') {
             steps {
