@@ -5,6 +5,9 @@ pipeline {
         DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
         K8S_DEPLOYMENT = "doctor-app-deployment.yaml"
         K8S_SERVICE = "doctor-app-service.yaml"
+        PROMETHEUS_DEPLOYMENT = "prometheus-deployment.yaml"
+        PROMETHEUS_CONFIG = "prometheus-config.yaml"
+        GRAFANA_DEPLOYMENT = "grafana-deployment.yaml"
     }
 
     stages {
@@ -53,12 +56,28 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    echo "🚀 Deploying to Kubernetes..."
+                    echo "🚀 Deploying Doctor-App to Kubernetes..."
                     sh """
                         echo '📂 Applying Deployment: $K8S_DEPLOYMENT'
                         kubectl apply -f $K8S_DEPLOYMENT
                         echo '📂 Applying Service: $K8S_SERVICE'
                         kubectl apply -f $K8S_SERVICE
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Monitoring Stack') {
+            steps {
+                script {
+                    echo "🚀 Deploying Prometheus and Grafana to Kubernetes..."
+                    sh """
+                        echo '📂 Applying Prometheus Config: $PROMETHEUS_CONFIG'
+                        kubectl apply -f $PROMETHEUS_CONFIG
+                        echo '📂 Applying Prometheus Deployment: $PROMETHEUS_DEPLOYMENT'
+                        kubectl apply -f $PROMETHEUS_DEPLOYMENT
+                        echo '📂 Applying Grafana Deployment: $GRAFANA_DEPLOYMENT'
+                        kubectl apply -f $GRAFANA_DEPLOYMENT
                     """
                 }
             }
