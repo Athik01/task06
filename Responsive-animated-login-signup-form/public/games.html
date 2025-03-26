@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #333;
+    }
+    nav a {
+      margin-left: 2rem;
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    /* Overlay Wrapper */
+    .overlay-wrapper {
+      position: relative;
+    }
+    .overlay-wrapper::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+
+    .hero {
+      background-image: url('bcard.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-top: 4rem;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+    .hero button {
+      display: inline-block;
+      color: white;
+      background-color: #102770;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .hero button:hover {
+      background-color: #0b1a3e;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-gap: 2rem;
+    }
+    .card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      text-align: center;
+    }
+    .card:hover {
+      transform: translateY(-10px);
+    }
+    .card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .card h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+    .card p {
+      font-size: 1.1rem;
+      color: #666;
+      font-weight: 500;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    footer p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .btn {
+      color: #102770;
+      background-color: bisque;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      color: bisque;
+      background-color: #102770;
+    }
+    .active-link {
+      font-weight: bold;
+      color: #007bff;
+    }
+    .links:hover {
+      color: #007bff;
+    }
+    .link_logout:hover {
+      color: rgb(247, 62, 62);
+    }
+  </style>
+</head>
+<body></body>
+  <header>
+    <div class="logo">الرقيب</div>
+    <nav>
+      <a href="#" onclick="redirectHome()" class="links" style="text-decoration: none;">Home</a>
+      <a href="#" onclick="redirectPage('about.html')" class="links" style="text-decoration: none;">About</a>
+      <a href="#" onclick="redirectPage('services.html')" class="links" style="text-decoration: none;">Services</a>
+      <a href="#" onclick="redirectPage('contact.html')" class="links" style="text-decoration: none;">Contact</a>
+      <a href="games.html" class="active-link" style="text-decoration: none;">Games</a>
+      <a href="index.html" class="link_logout" style="text-decoration: none;">Logout</a>
+    </nav>
+  </header>
+  
+  <div class="overlay-wrapper">
+    <div class="hero">
+      <br>
+      <h1 id="welcome-text"><i>It's play time!</i></h1> <!-- Updated to use an id for the text -->
+      <p><i>"Live life fully, with purpose and will."</i></p>
+    </div>
+  
+    <div class="container">
+      <div class="grid">
+        <div class="card">
+          <a href="portal.html" style="text-decoration:none;"><img src="portal.avif" alt="Feature 1">
+          <h3 class="links">Welcome to the Open World</h3>
+          <p>Visit & Relax!</p></a>
+        </div>
+        <div class="card">
+          <a href="ocean.html" style="text-decoration:none;"><img src="surf.jpg" alt="Feature 2">
+          <h3 class="links">Surf here a escape from hectic's</h3>
+          <p>Chill out with moves!</p></a>
+        </div>
+        <div class="card">
+        <a href="world.html" style="text-decoration:none;"><img src="world.jpg!s2" alt="Feature 3">
+          <h3 class="links">World in your view</h3>
+          <p>It's time to have a break and look out the beauty of the <i>creator!</i></p></a>
+        </div>
+        <div class="card">
+          <a href="index_tetris.html" style="text-decoration:none;"><img src="tetris.png" alt="Feature 4">
+          <h3 class="links">Tetris Play</h3>
+          <p><i>It's retro time!</i></p></a>
+        </div>
+        <div class="card">
+          <a href="index_coloron.html" style="text-decoration:none;"><img src="coloron.png" alt="Feature 5">
+          <h3 class="links">Coloron Ball's</h3>
+          <p>Play with balls to get mind free! :)</p></a>
+        </div>
+        <div class="card">
+          <a href="index_2048.html" style="text-decoration:none;"><img src="number_play.jpg" alt="Feature 6">
+          <h3 class="links">Number & Win</h3>
+          <p>Make needed moves and try to finish in less moves</p>
+        </div>
+      </div>
+    </div>
+  
+    <footer>
+      <p>&copy; 2024 Your Company</p>
+      <p>All Rights Reserved</p>
+    </footer>
+  </div>
+
+  <script>
+    // Extract query parameters from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const email = urlParams.get('email');
+    
+    // Display the user's name in the welcome message
+    const welcomeText = document.getElementById('welcome-text');
+    if (name && welcomeText) {
+      welcomeText.textContent = `Welcome, ${name}!`;
+    }
+
+    // Redirect to a page with query parameters
+    function redirectPage(page) {
+      const url = `${page}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+      window.location.href = url;
+    }
+
+    // Redirect to the home page with query parameters
+    function redirectHome() {
+      const homeUrl = `home.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+      window.location.href = homeUrl;
+    }
+  </script>
+</body>
+</html>

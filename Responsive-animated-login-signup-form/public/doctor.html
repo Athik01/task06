@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Reset basic styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base body styles */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Header styling */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 3rem;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #102770;
+}
+
+nav a {
+  margin-left: 2rem;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: #102770;
+  text-decoration: underline;
+}
+
+/* Hero section styling */
+.hero {
+  background-image: url('bcard.jpg'); /* Use your background image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  padding: 6rem 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  margin-top: 4rem; /* Adjust for fixed header */
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: -1;
+}
+
+.hero h1 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.hero button {
+  background-color: #f97300;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero button:hover {
+  background-color: #d46100;
+}
+
+/* Main content container */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 1400px;
+  margin: 6rem auto;
+  padding: 0 2rem;
+  gap: 2rem;
+}
+
+/* Card styling */
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.card h3 {
+  font-size: 1.8rem;
+  color: #102770;
+  margin-bottom: 1rem;
+}
+
+.card p {
+  font-size: 1.1rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Button styling */
+.btn {
+  color: white;
+  background-color: #102770;
+  padding: 0.9rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0b1a3e;
+}
+
+/* Footer styles */
+footer {
+  background-color: #102770;
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+  margin-top: 4rem;
+}
+
+footer p {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Form styling */
+.form-container {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 2.5rem;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 3rem auto;
+}
+
+.form-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.form-container label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-container input,
+.form-container textarea {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.form-container button {
+  background-color: #f97300;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-container button:hover {
+  background-color: #d46100;
+}
+
+/* Availability container */
+  .availability-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 300px;
+    margin: 2rem auto;
+  }
+
+  .availability-button {
+    padding: 10px 15px;
+    margin: 0.5rem; /* Space between buttons */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: box-shadow 0.2s;
+    display: inline-block; /* Ensure buttons are inline */
+  }
+  
+  .availability-button.open {
+    background-color: #4CAF50; /* Green for open */
+    color: white;
+  }
+  
+  .availability-button.close {
+    background-color: #F44336; /* Red for close */
+    color: white;
+  }
+  
+  /* Button hover effects */
+  .availability-button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+
+.availability-button:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-button {
+  display: block;
+  margin: 2rem auto;
+  padding: 0.8rem 2rem;
+  background-color: #00b640;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  font-weight: 500;
+  font:bold;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-button:hover {
+  background-color: #02990c;
+}
+
+/* Message box styles */
+.message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 1.2rem;
+  border-radius: 6px;
+  margin: 2rem auto;
+  text-align: center;
+  width: 80%;
+  max-width: 450px;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Image preview */
+.image-preview {
+  margin-bottom: 1.5rem;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+}
+
+  
+    
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">الرقيب</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+      <a href="index.html">Logout</a>
+    </nav>
+  </header>
+  
+  <div class="hero">
+    <h1 id="welcome-text">Welcome to Your Dashboard</h1>
+    <p><i>"Live life fully, with purpose and will."</i></p>
+    <button class="btn"><b>Visit your appointments</b></button>
+  </div>
+
+  <div class="container">
+    <div id="details-message" class="message" style="display: none;"></div>
+    
+    <div id="doctor-details-form" class="form-container" style="display: none;">
+      <h2>Update Your Details</h2>
+      <form id="detailsForm" onsubmit="submitDoctorDetails(event)" enctype="multipart/form-data">
+        <label for="image">Profile Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" onchange="previewImage(event)">
+        <div id="image-preview" class="image-preview"></div>
+
+        <input type="hidden" id="name" name="name" value="">
+
+        <label for="serviceFee">Service Fee:</label>
+        <input type="number" id="serviceFee" name="serviceFee" required>
+        
+        <label for="availability">Availability:</label>
+        <input type="text" id="availability" name="availability" required>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+        
+        <label for="contactDetails">Contact Details:</label>
+        <input type="text" id="contactDetails" name="contactDetails" required>
+        
+        <label for="organization">Organization:</label>
+        <input type="text" id="organization" name="organization" required>
+        
+        <label for="experience">Years of Experience:</label>
+        <input type="number" id="experience" name="experience" required>
+        
+        <input type="hidden" id="email" name="email" value="">
+        
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    
+    <div class="container">
+      <!-- Small button to toggle availability container -->
+      <button id="toggle-availability" class="toggle-button">Status</button>
+  
+      <!-- Availability container (initially hidden) -->
+      <div id="availability-container" class="availability-container" style="display: none;">
+        <button class="availability-button open" onclick="submitAvailability(event, 'Open')">Open</button>
+        <button class="availability-button close" onclick="submitAvailability(event, 'Close')">Close</button>
+        
+        <!-- Message container for availability status -->
+        <div id="availability-message" class="message" style="display: none;"></div>
+      
+        <!-- Message container for doctor details -->
+        <div id="details-message" class="message" style="display: none;"></div>
+      </div>
+      
+  </div>
+  
+      <div id="availability-message" class="message" style="display: none;"></div>
+  </div> 
+    
+  </div>
+  
+  <footer>
+    <p>&copy; 2024 Your Company</p>
+    <p>All Rights Reserved</p>
+  </footer>
+  
+  <script>
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        name: params.get('name'),
+        email: params.get('email')
+      };
+    }
+
+    function updateWelcomeText() {
+      const { name, email } = getQueryParams();
+      if (name) {
+        document.getElementById('welcome-text').textContent = `Welcome back, Doc ${name}!`;
+        document.getElementById('email').value = email; 
+        document.getElementById('name').value = name; 
+        checkDoctorDetails(email);
+      }
+    }
+
+    function checkDoctorDetails(email) {
+      fetch(`/check-doctor-details?email=${email}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error fetching details: ${response.status} ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data.exists) {
+            displayDoctorDetails(data.details);
+          } else {
+            document.getElementById('doctor-details-form').style.display = 'block';
+            showMessage('No details found. Please fill out the form.', 'info');
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching details:', error);
+          showMessage('An error occurred while fetching details. Please try again later.', 'error');
+        });
+    }
+
+    function toggleAvailabilityForm() {
+      const availabilityForm = document.getElementById('availability-form');
+      availabilityForm.style.display = availabilityForm.style.display === 'none' ? 'block' : 'none';
+    }
+    
+    function submitAvailability(event) {
+      event.preventDefault(); // Prevent default form submission
+      
+      const email = document.getElementById('email').value;
+      const availabilityStatus = document.querySelector('.availability-button.open') ? 'Open' : 'Close';
+
+      fetch('/update-availability', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, availabilityStatus })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Handle success feedback
+        showMessage('Availability updated successfully!', 'success');
+      })
+      .catch(error => {
+        console.error('Error updating availability:', error);
+        showMessage('Failed to update availability. Please try again.', 'error');
+      });
+    }
+    
+
+    function displayDoctorDetails(details) {
+      const detailsMessage = document.getElementById('details-message');
+      detailsMessage.innerHTML = `
+        <h3>Doctor Details</h3>
+        <img src="${details.image}" alt="Profile Image" 
+     style="width: 200px; height: auto; border-radius: 8px; margin-bottom: 1rem;" />
+        <p><b>Name:</b> ${details.name}</p>
+        <p><b>Service Fee:</b> ${details.serviceFee}</p>
+        <p><b>Availability:</b> ${details.availability}</p>
+        <p><b>Description:</b> ${details.description}</p>
+        <p><b>Contact Details:</b> ${details.contactDetails}</p>
+        <p><b>Organization:</b> ${details.organization}</p>
+        <p><b>Experience:</b> ${details.experience} years</p>
+      `;
+      detailsMessage.style.display = 'block';
+      document.getElementById('doctor-details-form').style.display = 'none';
+    }
+
+    function submitAvailability(event) {
+      event.preventDefault(); // Prevent default form submission
+      
+      const email = document.getElementById('email').value;
+      const availabilityStatus = document.querySelector('.availability-button.open') ? 'Open' : 'Close';
+    
+      fetch('/update-availability', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, availabilityStatus })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Handle success feedback
+        showMessage('Availability updated successfully!', 'success');
+      })
+      .catch(error => {
+        console.error('Error updating availability:', error);
+        showMessage('Failed to update availability. Please try again.', 'error');
+      });
+    }
+    
+
+    function previewImage(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imgPreview = document.getElementById('image-preview');
+        imgPreview.innerHTML = `<img src="${e.target.result}" alt="Profile Image Preview" />`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function showMessage(message, type, boxId) {
+      const messageBox = document.getElementById(boxId);
+      messageBox.textContent = message;
+      messageBox.className = `message ${type}`;
+      messageBox.style.display = 'block'; 
+    }
+    document.getElementById('toggle-availability').addEventListener('click', function() {
+      const availabilityContainer = document.getElementById('availability-container');
+      availabilityContainer.style.display = (availabilityContainer.style.display === 'none') ? 'block' : 'none';
+  });
+    document.querySelector('.availability-button.open').addEventListener('click', function() {
+      this.classList.add('selected');
+      document.querySelector('.availability-button.close').classList.remove('selected');
+      submitAvailability(event); 
+    });
+
+    document.querySelector('.availability-button.close').addEventListener('click', function() {
+      this.classList.add('selected');
+      document.querySelector('.availability-button.open').classList.remove('selected');
+      submitAvailability(event); 
+    });
+
+    window.onload = updateWelcomeText;
+  </script>
+</body>
+</html>

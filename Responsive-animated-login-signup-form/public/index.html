@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Signup Form</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.9/css/unicons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .otp-input {
+      width: 40px;
+      height: 40px;
+      margin: 5px;
+      text-align: center;
+      font-size: 18px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .otp-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="section">
+    <div class="container">
+      <div class="row full-height justify-content-center">
+        <div class="col-12 text-center align-self-center py-5">
+          <div class="section pb-5 pt-5 pt-sm-2 text-center">
+            <h6 class="mb-0 pb-3">
+              <span>Log In</span>
+              <span>Sign Up</span>
+            </h6>
+            <input class="checkbox" type="checkbox" id="reg-log" name="reg-log">
+            <label for="reg-log"></label>
+
+            <div class="card-3d-wrap mx-auto">
+              <div class="card-3d-wrapper">
+                <!-- Log In Section -->
+                <div class="card-front">
+                  <div class="center-wrap">
+                    <div class="section text-center">
+                      <h4 class="mb-4 pb-3">Log In</h4>
+                      <form method="post" action="http://localhost:4000/login">
+                        <div class="form-group">
+                          <input type="email" name="email" class="form-style" placeholder="Your Email" id="logemail" autocomplete="off" required>
+                          <i class="input-icon uil uil-at"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                          <input type="password" name="password" class="form-style" placeholder="Your Password" id="logpass" autocomplete="off" required>
+                          <i class="input-icon uil uil-lock-alt"></i>
+                        </div>
+                        <button type="submit" class="btn mt-4">Submit</button>
+                      </form>
+                      <p class="mb-0 mt-4 text-center">
+                        <a href="#" class="link">Forgot your password?</a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Sign Up Section -->
+                <div class="card-back">
+                  <div class="center-wrap">
+                    <div class="section text-center">
+                      <br>
+                      <h4 class="mb-4 pb-3">Register new account!</h4>
+                      <form method="post" action="http://localhost:4000/signup" id="signupForm">
+                        <div class="form-group">
+                          <input type="text" name="name" class="form-style" placeholder="Your Full Name" id="signupname" autocomplete="off" required>
+                          <i class="input-icon uil uil-user"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                          <div class="email-container">
+                            <input type="email" name="email" class="form-style email-input" placeholder="Your Email" id="signupemail" autocomplete="off" required>
+                            <i class="input-icon uil uil-at"></i>
+                            <button type="button" class="btn btn-primary btn-sm send-otp-btn" id="sendOtpBtn">Send OTP</button>
+                          </div>
+                          <small id="otpSentMsg" style="display:none;color:green;">OTP sent to your email.</small>
+                        </div>
+                        <br>
+                        <!-- OTP input fields -->
+                        <div class="form-group mt-2 otp-container">
+                          <label for="otp1" style="font-size:120%;">Enter OTP</label>
+                          <input type="text" class="otp-input" maxlength="1" id="otp1">
+                          <input type="text" class="otp-input" maxlength="1" id="otp2">
+                          <input type="text" class="otp-input" maxlength="1" id="otp3">
+                          <input type="text" class="otp-input" maxlength="1" id="otp4">
+                          <input type="text" class="otp-input" maxlength="1" id="otp5">
+                          <input type="text" class="otp-input" maxlength="1" id="otp6">
+                        </div>
+
+                        <div class="form-group mt-2">
+                          <input type="password" name="password" class="form-style" placeholder="Your Password" id="signuppass" autocomplete="off" required>
+                          <i class="input-icon uil uil-lock-alt"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                          <input type="password" name="confirm_password" class="form-style" placeholder="Confirm Your Password" id="signupconfirmpass" autocomplete="off" required>
+                          <i class="input-icon uil uil-lock-alt"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                          <input type="number" name="age" class="form-style" placeholder="Your Age" id="signupage" autocomplete="off" required>
+                          <i class="input-icon uil uil-calendar-alt"></i>
+                        </div>
+                        <div class="form-group mt-2">
+                          <select name="type" id="usertype" class="form-style" required>
+                            <option class="active">Select any option</option>
+                            <option value="citizen">Citizen</option>
+                            <option value="consultant">Consultant</option>
+                          </select>
+                          <i class="input-icon uil uil-info-circle"></i>
+                        </div>
+                        <button type="submit" class="btn mt-4">Register</button>
+                        <br>
+                      </form>
+                      <br>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Automatically move to the next box when typing and back on delete
+    const otpInputs = document.querySelectorAll('.otp-input');
+    
+    otpInputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < otpInputs.length - 1) {
+          otpInputs[index + 1].focus();
+        }
+      });
+      
+      input.addEventListener('keydown', (e) => {
+        if (e.key === "Backspace" && input.value === '' && index > 0) {
+          otpInputs[index - 1].focus();
+        }
+      });
+    });
+
+    // Combine the OTP inputs into one string and send to the server
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      let otp = '';
+      otpInputs.forEach(input => {
+        otp += input.value;
+      });
+
+      if (otp.length === 6) {
+        // Create a hidden input to hold the combined OTP value
+        const otpField = document.createElement('input');
+        otpField.type = 'hidden';
+        otpField.name = 'otp';
+        otpField.value = otp;
+        document.getElementById('signupForm').appendChild(otpField);
+
+        // Submit the form
+        this.submit();
+      } else {
+        alert('Please enter the complete 6-digit OTP');
+      }
+    });
+
+    // Send OTP on button click
+    document.getElementById('sendOtpBtn').addEventListener('click', function() {
+      const email = document.getElementById('signupemail').value;
+      if (email) {
+        fetch(`http://localhost:4000/send-otp?email=${encodeURIComponent(email)}`, { method: 'GET' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              document.getElementById('otpSentMsg').style.display = 'block';
+            } else {
+              alert('Failed to send OTP');
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      } else {
+        alert('Please enter a valid email');
+      }
+    });
+  </script>
+
+</body>
+
+</html>

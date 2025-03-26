@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #102770;
+    }
+    nav a {
+      margin-left: 2rem;
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .hero {
+      background-image: url('bcard.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+      margin-top: 4rem;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: -1;
+    }
+    .hero h1 {
+      font-size: 3.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+    }
+    .hero button {
+      display: inline-block;
+      color: white;
+      background-color: #102770;
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .hero button:hover {
+      background-color: #0b1a3e;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 2rem;
+    }
+    .card {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 100%;
+      height: 400px; /* Fixed height for consistency */
+      position: relative;
+      transition: all 0.5s ease;
+    }
+    .card.expanded {
+      height: auto; /* Expand height when the card is expanded */
+    }
+    .card-content {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 1rem;
+    }
+    .doctor-image {
+      width: 30%;
+      margin-right: 1.5rem;
+    }
+    .doctor-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+    .expandable-form {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      background-color: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .expandable-form input,
+    .expandable-form textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    .expandable-form textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    .expandable-form button {
+      background-color: #102770;
+      color: white;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+    .expandable-form button:hover {
+      background-color: #0b1a3e;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff4b5c;
+      color: white;
+      border: none;
+      padding: 0.5rem;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: none;
+    }
+    .btn {
+      background-color: #102770;
+      color: white;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    .btn:hover {
+      background-color: #0b1a3e;
+    }
+    footer {
+      background-color: #333;
+      color: white;
+      padding: 2rem 0;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    footer p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    .active-link {
+      
+      font-weight: bold;
+      color: #007bff; 
+      
+  }
+  .links:hover{
+    color: #007bff;
+  }
+  .link_logout:hover{
+    color: rgb(247, 62, 62);
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo">الرقيب</div>
+    <nav>
+      <a href="#" onclick="redirectHome()" class="active-link" style="text-decoration: none;">Home</a>
+      <a href="#" onclick="redirectPage('about.html')" class="links" style="text-decoration: none;">About</a>
+      <a href="#" onclick="redirectPage('service.html')" class="links" style="text-decoration: none;">Services</a>
+      <a href="#" onclick="redirectPage('contact.html')" class="links" style="text-decoration: none;">Contact</a>
+      <a href="#" onclick="redirectPage('games.html')" class="links" style="text-decoration: none;">Games</a>
+      <a href="index.html" class="link_logout" style="text-decoration: none;">Logout</a>
+    </nav>
+  </header>
+  
+  <div class="hero">
+    <h1 id="welcome-text">Welcome to Your Dashboard</h1>
+    <p><i>"Live life fully, with purpose and will."</i></p>
+    <button class="btn"><b>Book your Appointments</b></button>
+  </div>
+
+  <div class="container">
+    <div id="alert" class="alert"></div>
+    <div class="grid" id="doctor-cards">
+      
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Your Company</p>
+    <p>All Rights Reserved</p>
+  </footer>
+
+  <script>
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        name: params.get('name'),
+        email: params.get('email')
+      };
+    }
+
+    function updateWelcomeText() {
+      const { name } = getQueryParams();
+      if (name) {
+        const welcomeText = document.getElementById('welcome-text');
+        welcomeText.textContent = `Welcome, ${name}!`;
+      }
+    }
+
+    function showMessage(message, type) {
+      const alertBox = document.getElementById('alert');
+      alertBox.textContent = message;
+      alertBox.className = `alert ${type}`;
+      alertBox.style.display = 'block';
+    }
+
+    function closeCard(button) {
+      const card = button.closest('.card');
+      const form = card.querySelector('.expandable-form');
+      const bookButton = card.querySelector('.btn');
+      const closeButton = card.querySelector('.close-btn');
+      
+      form.style.display = 'none';
+      card.classList.remove('expanded');
+      bookButton.style.display = 'block';
+      closeButton.style.display = 'none';
+      
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(c => {
+        c.style.display = 'flex'; 
+      });
+    }
+
+    function bookDoctor(email, button) {
+      const card = button.closest('.card');
+      const form = card.querySelector('.expandable-form');
+      const bookButton = card.querySelector('.btn');
+      const closeButton = card.querySelector('.close-btn');
+  
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(c => {
+        if (c !== card) {
+          c.style.display = 'none';
+        }
+      });
+  
+      form.style.display = 'flex';
+      card.classList.add('expanded');
+      bookButton.style.display = 'none';
+      closeButton.style.display = 'block';
+    }
+
+    function fetchDoctors() {
+      fetch('/doctors')
+        .then(response => response.json())
+        .then(data => {
+          const doctorCardsContainer = document.getElementById('doctor-cards');
+  
+          if (!data.doctors || data.doctors.length === 0) {
+            showMessage('No doctors available at the moment.', 'error');
+            return;
+          }
+  
+          data.doctors.forEach(doctor => {
+            const doctorCard = document.createElement('div');
+            doctorCard.className = 'card';
+  
+            doctorCard.innerHTML = `
+              <div class="doctor-image">
+                <img src="${doctor.image || 'placeholder.png'}" alt="${doctor.name}">
+              </div>
+              <div class="card-content">
+                <button class="close-btn" onclick="closeCard(this)">&times;</button>
+                <h3>Dr ${doctor.name || 'Doctor Name'}</h3>
+                <p><strong>Service Fee:</strong> ${doctor.serviceFee || 'Fee Not Available'}</p>
+                <p><strong>Availability:</strong> ${doctor.availability || 'Availability Not Available'}</p>
+                <p><strong>Description:</strong> ${doctor.description || 'Description Not Available'}</p>
+                <p><strong>Contact:</strong> ${doctor.contactDetails || 'Contact Not Available'}</p>
+                <p><strong>Organization:</strong> ${doctor.organization || 'Organization Not Available'}</p>
+                <p><strong>Experience:</strong> ${doctor.experience || 'Experience Not Available'}</p>
+                <button class="btn" onclick="bookDoctor('${doctor.email}', this)">Book Appointment</button>
+                <div class="expandable-form">
+                  <h3>Book Appointment</h3>
+                  <input type="text" placeholder="Enter your name">
+                  <input type="email" placeholder="Enter your email">
+                  <textarea placeholder="Message"></textarea>
+                  <button>Submit</button>
+                </div>
+              </div>
+            `;
+  
+            doctorCardsContainer.appendChild(doctorCard);
+          });
+        })
+        .catch(error => {
+          showMessage('Error loading doctor information.', 'error');
+        });
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      updateWelcomeText();
+      fetchDoctors();
+    });
+
+    function redirectPage(page) {
+      const { name, email } = getQueryParams();
+      const url = `${page}?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+      window.location.href = url;
+    }
+
+    function redirectHome() {
+      const { name, email } = getQueryParams();
+      const homeUrl = `home.html?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+      window.location.href = homeUrl;
+    }
+  </script>
+  
+</body>
+</html>

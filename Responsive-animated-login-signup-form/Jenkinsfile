@@ -1,0 +1,90 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
+        K8S_DEPLOYMENT = "doctor-app-deployment.yaml"
+        K8S_SERVICE = "doctor-app-service.yaml"
+    }
+
+    stages {
+        stage('Cleanup Workspace') {
+            steps {
+                echo "🧹 Cleaning workspace..."
+                cleanWs() // Cleans workspace before fetching new code
+            }
+        }
+
+        stage('Clone Repository') {
+            steps {
+                echo "📥 Cloning repository..."
+                git branch: 'main', url: 'https://github.com/Athik01/Responsive-animated-login-signup-form.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "🐳 Building Docker Image: $DOCKER_IMAGE"
+                    sh """
+                        echo '🚀 Starting Docker Build...'
+                        docker build -t $DOCKER_IMAGE .
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    echo "📤 Pushing Docker Image to Docker Hub..."
+                    withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                        sh """
+                            echo '🔄 Logging in to Docker Hub...'
+                            docker login -u mohamedathikr -p qwerty786!A
+                            echo '🚀 Pushing Image: $DOCKER_IMAGE'
+                            docker push $DOCKER_IMAGE
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    echo "🚀 Deploying to Kubernetes..."
+                    sh """
+                        echo '📂 Applying Deployment: $K8S_DEPLOYMENT'
+                        kubectl apply -f $K8S_DEPLOYMENT
+                        echo '📂 Applying Service: $K8S_SERVICE'
+                        kubectl apply -f $K8S_SERVICE
+                    """
+                }
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                script {
+                    echo "🔍 Verifying Kubernetes Deployment..."
+                    sh """
+                        echo '📌 Listing Pods...'
+                        kubectl get pods
+                        echo '📌 Listing Services...'
+                        kubectl get svc
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "✅ Deployment Successful!"
+        }
+        failure {
+            echo "❌ Deployment Failed!"
+        }
+    }
+}
