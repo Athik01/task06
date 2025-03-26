@@ -2,31 +2,37 @@ pipeline {
     agent any
 
     environment {
+        // Docker image
         DOCKER_IMAGE = "mohamedathikr/doctor-app:latest"
+        
+        // Root folder containing Dockerfile + subfolder for K8s files
         WORK_DIR = "Responsive-animated-login-signup-form"
-        K8S_DEPLOYMENT = "${WORK_DIR}/doctor-app-deployment.yaml"
-        K8S_SERVICE = "${WORK_DIR}/doctor-app-service.yaml"
-        PROMETHEUS_DEPLOYMENT = "${WORK_DIR}/prometheus-deployment.yaml"
-        PROMETHEUS_CONFIG = "${WORK_DIR}/prometheus-config.yaml"
-        GRAFANA_DEPLOYMENT = "${WORK_DIR}/grafana-deployment.yaml"
+        
+        // Paths to K8s YAML files under the k8s folder
+        K8S_DEPLOYMENT = "k8s/doctor-app-deployment.yaml"
+        K8S_SERVICE = "k8s/doctor-app-service.yaml"
+        PROMETHEUS_DEPLOYMENT = "k8s/prometheus-deployment.yaml"
+        PROMETHEUS_CONFIG = "k8s/prometheus-config.yaml"
+        GRAFANA_DEPLOYMENT = "k8s/grafana-deployment.yaml"
     }
 
     stages {
         stage('Cleanup Workspace') {
             steps {
-                echo "🧹 Cleaning workspace..."
+                echo "Cleaning workspace..."
                 cleanWs()
             }
         }
 
         stage('Clone Repository') {
             steps {
-                echo "📥 Cloning repository..."
+                echo "Cloning repository..."
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
                         url: 'https://github.com/Athik01/task06.git',
+                        // If you have GitHub credentials stored in Jenkins, update this ID
                         credentialsId: 'git-credentials'
                     ]]
                 ])
@@ -36,12 +42,12 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dir(WORK_DIR) { // ✅ Set working directory
-                        echo "🐳 Building Docker Image: ${DOCKER_IMAGE}"
-                        powershell """
-                            Write-Output '🚀 Starting Docker Build...'
-                            docker build -t "${DOCKER_IMAGE}" .
-                        """
+                    dir(WORK_DIR) {
+                        echo "Building Docker Image: ${DOCKER_IMAGE}"
+                        powershell '''
+                            Write-Host "Starting Docker Build..."
+                            docker build -t "${env:DOCKER_IMAGE}" .
+                        '''
                     }
                 }
             }
@@ -50,50 +56,52 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    echo "📤 Pushing Docker Image to Docker Hub..."
+                    echo "Pushing Docker Image to Docker Hub..."
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        powershell """
-                            Write-Output '🔄 Logging in to Docker Hub...'
-                            docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
-                            Write-Output '🚀 Pushing Image: ${DOCKER_IMAGE}'
-                            docker push "${DOCKER_IMAGE}"
-                        """
+                        powershell '''
+                            Write-Host "Logging in to Docker Hub..."
+                            docker login -u "${env:DOCKER_USER}" -p "${env:DOCKER_PASS}"
+                            Write-Host "Pushing Image: ${env:DOCKER_IMAGE}"
+                            docker push "${env:DOCKER_IMAGE}"
+                        '''
                     }
                 }
             }
         }
 
         stage('Deploy to Kubernetes') {
-    steps {
-        script {
-            dir(WORK_DIR) { // Set working directory for YAML files
-                echo "Deploying Doctor-App to Kubernetes..."
-                powershell """
-                    Write-Output 'Applying Deployment: ${K8S_DEPLOYMENT}'
-                    kubectl apply -f "${K8S_DEPLOYMENT}"
-                    Write-Output 'Applying Service: ${K8S_SERVICE}'
-                    kubectl apply -f "${K8S_SERVICE}"
-                """
+            steps {
+                script {
+                    dir(WORK_DIR) {
+                        echo "Deploying Doctor-App to Kubernetes..."
+                        // Use single quotes in PowerShell for file paths to avoid terminator errors
+                        powershell '''
+                            Write-Host "Applying Deployment: ${env:K8S_DEPLOYMENT}"
+                            kubectl apply -f "${env:K8S_DEPLOYMENT}"
+                            
+                            Write-Host "Applying Service: ${env:K8S_SERVICE}"
+                            kubectl apply -f "${env:K8S_SERVICE}"
+                        '''
+                    }
+                }
             }
         }
-    }
-}
-
-
 
         stage('Deploy Monitoring Stack') {
             steps {
                 script {
-                    dir(WORK_DIR) { // ✅ Ensure correct directory for monitoring files
-                        echo "🚀 Deploying Prometheus and Grafana to Kubernetes..."
-                        powershell """
-                            Write-Output '📂 Applying Prometheus Config: ${PROMETHEUS_CONFIG}'
-                            kubectl apply -f "${PROMETHEUS_CONFIG}"
-                            Write-Output '📂 Applying Prometheus Deployment: ${PROMETHEUS_DEPLOYMENT}'
-                            kubectl apply -f "${PROMETHEUS_DEPLOYMENT}"
-                            Write-Output '📂 Applying Grafana Deployment: ${GRAFANA_DEPLOYMENT}'
-                            kubectl apply -f "${GRAFANA_DEPLOYMENT}"
-                        """
+                    dir(WORK_DIR) {
+                        echo "Deploying Prometheus and Grafana..."
+                        powershell '''
+                            Write-Host "Applying Prometheus Config: ${env:PROMETHEUS_CONFIG}"
+                            kubectl apply -f "${env:PROMETHEUS_CONFIG}"
+                            
+                            Write-Host "Applying Prometheus Deployment: ${env:PROMETHEUS_DEPLOYMENT}"
+                            kubectl apply -f "${env:PROMETHEUS_DEPLOYMENT}"
+                            
+                            Write-Host "Applying Grafana Deployment: ${env:GRAFANA_DEPLOYMENT}"
+                            kubectl apply -f "${env:GRAFANA_DEPLOYMENT}"
+                        '''
                     }
                 }
             }
@@ -102,13 +110,13 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 script {
-                    echo "🔍 Verifying Kubernetes Deployment..."
-                    powershell """
-                        Write-Output '📌 Listing Pods...'
+                    echo "Verifying Kubernetes Deployment..."
+                    powershell '''
+                        Write-Host "Listing Pods..."
                         kubectl get pods
-                        Write-Output '📌 Listing Services...'
+                        Write-Host "Listing Services..."
                         kubectl get svc
-                    """
+                    '''
                 }
             }
         }
@@ -116,10 +124,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Deployment Successful!"
+            echo "Deployment Successful!"
         }
         failure {
-            echo "❌ Deployment Failed!"
+            echo "Deployment Failed!"
         }
     }
 }
