@@ -20,14 +20,13 @@ pipeline {
 
            stage('Clone Repository') {
     steps {
-        echo '📥 Cloning repository...'
+        echo '📩 Cloning repository...'
         withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
-            sh '''
-            git clone https://$GITHUB_TOKEN@github.com/Athik01/task06.git
-            '''
+            sh 'git clone https://$GITHUB_TOKEN@github.com/Athik01/task06.git'
         }
     }
 }
+
 
 
 
